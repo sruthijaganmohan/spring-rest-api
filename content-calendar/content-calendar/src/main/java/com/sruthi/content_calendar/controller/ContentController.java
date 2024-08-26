@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.sruthi.content_calendar.model.Content;
-import com.sruthi.content_calendar.repository.ContentCollectionRepository;
+import com.sruthi.content_calendar.repository.ContentRepository;
+
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -22,9 +25,9 @@ import java.util.List;
 @CrossOrigin
 public class ContentController {
 
-    private final ContentCollectionRepository repository;
+    private final ContentRepository repository;
 
-    public ContentController(ContentCollectionRepository repository) {
+    public ContentController(ContentRepository repository) {
         this.repository = repository;
     }
 
@@ -35,13 +38,18 @@ public class ContentController {
 
     @GetMapping("/{id}")
     public Content findById(@PathVariable Integer id) {
-        return repository.findByID(id)
+        return repository.findById(id)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Content not found"));
+    }
+
+    @GetMapping("/filter/{keyword}")
+    public List<Content> findByTitle(@PathVariable String keyword) {
+        return repository.findAllByTitleContains(keyword);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public void create(@RequestBody Content content) {
+    public void create(@Valid @RequestBody Content content) {
         repository.save(content);
     }
 
@@ -57,7 +65,7 @@ public class ContentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
     public void delete(@PathVariable Integer id) {
-        repository.delete(id);
+        repository.deleteById(id);
     }
  
 

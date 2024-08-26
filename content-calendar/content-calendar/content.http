@@ -4,12 +4,18 @@ GET http://localhost:8080/api/content
 ### Find content by id
 GET http://localhost:8080/api/content/1
 
+### Find content by keyword
+GET http://localhost:8080/api/content/filter/API
+
+### Find content by keyword bad example
+GET http://localhost:8080/api/content/filter/IPA
+
 ### Create new content
 POST http://localhost:8080/api/content
 Content-Type: application/json
 
 {
-    "id": 2,
+    "id": null,
     "title": "Title2",
     "desc": "Second blog post",
     "status": "IDEA",
